@@ -1,6 +1,7 @@
-const logger = require( 'logfmt' );
-const EventEmitter = require( 'events' );
-const services = require( './services' );
+const logger = require( "logfmt" );
+const EventEmitter = require( "events" );
+const services = require( "./services" );
+const account = require( "./models/account.js" )
 
 /**
  * Application Core
@@ -9,6 +10,10 @@ const services = require( './services' );
 class App extends EventEmitter {
     get settings() {
         return this._settings;
+    }
+
+    get account() {
+        return account;
     }
     /**
      * App Constructor

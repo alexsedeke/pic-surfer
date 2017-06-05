@@ -40,7 +40,7 @@ class ConfigOptions{
 
 const ConfigOptionsInstance = new ConfigOptions({
     configDir: path.join(__dirname, '../config'),
-    prefix: "pic-surfer"
+    prefix: "psurfer"
 });
 
 Object.freeze(ConfigOptionsInstance);

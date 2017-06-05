@@ -11,5 +11,15 @@
             }
         }
     },
-    "cors": ""
+    "session": {
+        "key": "pic:surfer",
+        "maxAge": 86400000,
+        "overwrite": true,
+        "httpOnly": true,
+        "signed": true
+    },
+    "keys": ["Replace on server using env settings!!!"],
+    "cors": {
+
+    }
 }

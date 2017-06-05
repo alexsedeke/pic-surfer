@@ -38,7 +38,7 @@ function startServer( workerId ) {
     /* init app core */
     config.app.worker = workerId;
     let app = new App( config.app );
-    let server = http.createServer( web( config.web, {} ).callback() );
+    let server = http.createServer( web( config.web, app ).callback() );
     // app.on( 'ready', start );
     // app.on( 'lost', shutdown );
     app.connect();

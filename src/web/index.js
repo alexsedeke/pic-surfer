@@ -21,11 +21,12 @@ const routes = require("./routes");
 module.exports = function web(config, app) {
     let web = new Koa();
     web.context.config = config;
+    web.keys = config.keys;
 
     /*
      * Setup middleware
      */
-    web.use(middleware(config));
+    web.use(middleware(config, app));
 
     /*
      * Routes
