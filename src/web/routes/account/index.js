@@ -6,6 +6,8 @@
  * @license   Apache-2.0
  */
 const passport = require( "koa-passport" );
+const jwt = require('jsonwebtoken');
+
 module.exports = ( router, config, app ) => {
     router.get( "/", ( ctx, next ) => {
         ctx.body = 'Account route';
@@ -15,18 +17,30 @@ module.exports = ( router, config, app ) => {
         failureRedirect: '/',
         session: false
     } ) )
+    .post( '/auth', function ( ctx, next ) {
+        return passport.authenticate( 'local', function ( err, account, info, status ) {
+             if (err) {
+                 return next(err);
+             }
+             if (!account) {
+                 return ctx.redirect('/');
+             } else {
+                 let token = jwt.sign({ id: account._id, email: account.email, name: account.username }, app.settings.jwt.secret);
+                 return ctx.body = token;
+             }
+        } )( ctx, next );
+    } )
     .post( "/create", async(ctx, next) => {
-        if (ctx.request.body.user && ctx.request.body.password) {
+        if (ctx.request.body.usermail && ctx.request.body.password && ctx.request.body.username) {
             try {
                 let newAccount = new app.account();
-                newAccount.email = ctx.request.body.user;
+                newAccount.email = ctx.request.body.usermail;
                 newAccount.password = ctx.request.body.password;
-                newAccount.username = ctx.request.body.user;
+                newAccount.username = ctx.request.body.username;
                 await newAccount.save();
                 ctx.body = "was saved";
                 next();
             } catch(e) {
-                console.log(e.message);
                 ctx.body = "mist";
                 next();
             }

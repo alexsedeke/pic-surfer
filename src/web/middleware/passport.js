@@ -1,6 +1,5 @@
 /**
- * Compose Middleware
- * for CORS and bodyParser
+ * Compose passport auth strategies for middleware
  *
  * @author    Jan Nahody {@link http://nahody.github.io}
  * @copyright Copyright (c) 2017, Jan Nahody <jan.nahody@gmail.com>
@@ -11,23 +10,9 @@ const LocalStrategy = require( 'passport-local' ).Strategy;
 
 
 function initPassport(app) {
-    passport.use( new LocalStrategy( function ( userident, password, done ) {
-
-        // if (!username || !password) {
-        //     return done( null, false, {
-        //                 message: 'Username and password are required.'
-        //             } );
-        // }
-        //
-        // if (username === "test" && password === "test") {
-        //     return done(null, 'jwt');
-        // } else {
-        //     done( null, false, {
-        //                 message: 'Incorrect username or password.'
-        //             } );
-        // }
+    passport.use( new LocalStrategy( function ( username, password, done ) {
         app.account.findOne( {
-            email: userident
+            email: username
         }, function ( err, account ) {
             if( err ) {
                 return done( err );
@@ -42,8 +27,9 @@ function initPassport(app) {
                     message: 'Incorrect password.'
                 } );
             }
-            return done( null, user );
+            return done( null, account );
         } );
+
     } ) );
 
     return passport;
