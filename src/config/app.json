@@ -1,0 +1,9 @@
+{
+    "services": {
+        "mongoURI": "mongodb://192.168.99.100:28000/local",
+        "amqp": {
+            "host": "192.168.99.100",
+            "port": 5672
+        }
+    }
+}

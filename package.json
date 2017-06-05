@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/nahody/pic-surfer#readme",
   "dependencies": {
+    "amqp": "^0.2.6",
     "import-dir": "0.0.1",
     "kcors": "^2.2.1",
     "koa": "^2.2.0",
@@ -33,6 +34,7 @@
     "koa-router": "^7.2.0",
     "lodash": "^4.17.4",
     "logfmt": "^1.2.0",
+    "mongoose": "^4.10.4",
     "nodenvconf": "^0.4.0",
     "npm-run-all": "^4.0.2",
     "throng": "^4.0.0"

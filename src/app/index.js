@@ -1,22 +1,23 @@
 const logger = require( 'logfmt' );
 const EventEmitter = require( 'events' );
-const connections = require( './connections' );
-const Photo = require( './photo' );
-const chokidar = require( 'chokidar' );
+const services = require( './services' );
+
 /**
  * Application Core
  *
  */
 class App extends EventEmitter {
+    get settings() {
+        return this._settings;
+    }
     /**
      * App Constructor
      *
      */
     constructor( config ) {
         super();
-        this.config = config;
+        this._settings = config;
         this.exchange = {};
-        this.photo = new Photo(config);
         this.setupConnectionsListeners();
     }
     /**
@@ -27,11 +28,11 @@ class App extends EventEmitter {
      *    emit lost to app listerners.
      */
     setupConnectionsListeners() {
-         connections.once( 'ready', async () => {
+         services.once( 'ready', async () => {
             await this.createExchanger();
             this.emit( 'ready' );
         } );
-        connections.once( 'lost', () => {
+        services.once( 'lost', () => {
             this.emit( 'lost' );
         } )
     }
@@ -40,13 +41,13 @@ class App extends EventEmitter {
      * Defined services are MongoDB and RabbitMQ.
      */
     connect() {
-        connections.connect( this.config.services );
+        services.connect( this.settings.services );
     }
     /**
-     * Disconnect all service  connections
+     * Disconnect all services
      */
     async disconnect() {
-        await connections.disconnect();
+        await services.disconnect();
     }
     /**
      * Connect functionality to queue subscribers.
@@ -54,18 +55,18 @@ class App extends EventEmitter {
      * the queue entries.
      */
     startQueueSubscriber() {
-        let worker = this.config.worker;
+        let worker = this.settings.worker;
         if (this.exchange) {
-            connections.rabbitmq.queue( 'kakao.queue', ( queue ) => {
-                queue.bind( this.exchange, 'fileImport', () => {
+            services.rabbitmq.queue( 'picsurfer.queue', ( queue ) => {
+                queue.bind( this.exchange, 'doSomething', () => {
                     queue.subscribe( async ( message, headers, properties ) => {
                         logger.log( {
                             type: "info",
-                            service: "photo file import",
+                            service: "get to do something",
                             msg: message.data.toString(),
-                            worker: this.config.worker
+                            worker: this.settings.worker
                         });
-                        await this.photo.importPhoto( message.data.toString() );
+                        //await do something here;
                     } );
                 } );
             });
@@ -78,39 +79,17 @@ class App extends EventEmitter {
      * The createExchanger method is automaticali called on this.connect method.
      */
     createExchanger() {
-        connections.rabbitmq.exchange( 'kakao.queue', {
+        services.rabbitmq.exchange( 'picsurfer.queue', {
             type: 'direct'
         }, ( exchange ) => {
             logger.log( {
                 type: "info",
-                msg: "Exchange for publisher kakao.queue startet",
+                msg: "Exchange for publisher picsurfer.queue startet",
                 service: "rabbitmq",
-                worker: this.config.worker
+                worker: this.settings.worker
             } );
             this.exchange = exchange;
         } );
-    }
-    /**
-     * Watch import folder
-     * and add new queue message on new files.
-     * The path parameter is optional. When no parameter is entered
-     * the Application importFolder settings is used.
-     * Caution: The function have to be startet on single process only!
-     *
-     * @param path {string} (optional) Relative or absolute path to import folder.
-     * @return watcher {object} chokidar object.
-     */
-    watchFolder( path ) {
-        let watcher = chokidar.watch( path || this.config.import.folder, {
-            ignored: /(^|[\/\\])\../,
-            persistent: true
-        } );
-
-        watcher.on('add', path => {
-            this.exchange.publish('fileImport', path);
-        });
-
-        return watcher;
     }
 }
 module.exports = App;

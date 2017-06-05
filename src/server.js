@@ -9,7 +9,7 @@ const logger = require( 'logfmt' );
 const cpus = require( 'os' ).cpus().length;
 const http = require( 'http' );
 const throng = require( 'throng' );
-//const App = require( './app' );
+const App = require( './app' );
 const web = require( './web' );
 const config = require( './config' ).all();
 
@@ -36,12 +36,12 @@ function startServer( workerId ) {
         concurrency: config.web.concurrency
     } );
     /* init app core */
-    // config.app.worker = workerId;
-    // let app = new App( config.app );
+    config.app.worker = workerId;
+    let app = new App( config.app );
     let server = http.createServer( web( config.web, {} ).callback() );
     // app.on( 'ready', start );
     // app.on( 'lost', shutdown );
-    // app.connect();
+    app.connect();
     start();
 
     /**
@@ -75,7 +75,7 @@ function startServer( workerId ) {
             msg: 'shutting down',
             service: "server"
         } );
-        //await app.disconnect();
+        await app.disconnect();
         process.exit(0);
     }
 }
