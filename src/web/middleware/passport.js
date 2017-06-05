@@ -7,9 +7,12 @@
  */
 const passport = require( 'koa-passport' );
 const LocalStrategy = require( 'passport-local' ).Strategy;
+const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
 
 
 function initPassport(app) {
+    /* Local Credentials Passport Strategy */
     passport.use( new LocalStrategy( function ( username, password, done ) {
         app.account.findOne( {
             email: username
@@ -30,6 +33,25 @@ function initPassport(app) {
             return done( null, account );
         } );
 
+    } ) );
+
+    /* JWT Passport Strategy */
+    let JWToptions = {
+        jwtFromRequest: ExtractJwt.fromAuthHeader(),
+        secretOrKey: app.settings.jwt.secret
+    }
+
+    passport.use(new JwtStrategy(JWToptions, function(jwt_payload, done) {
+        app.account.findById(jwt_payload.id, function(err, account) {
+            if (err) {
+                return done(err, false);
+            }
+            if (account) {
+                return done(null, account);
+            } else {
+                return done(null, false);
+            }
+        });
     } ) );
 
     return passport;
