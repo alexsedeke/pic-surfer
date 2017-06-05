@@ -12,11 +12,6 @@ module.exports = ( router, config, app ) => {
     router.get( "/", ( ctx, next ) => {
         ctx.body = 'Account route';
     } )
-    .post( "/login", passport.authenticate( 'local', {
-        successRedirect: '/profile',
-        failureRedirect: '/',
-        session: false
-    } ) )
     .post( '/auth', function ( ctx, next ) {
         return passport.authenticate( 'local', function ( err, account, info, status ) {
              if (err) {
@@ -30,6 +25,9 @@ module.exports = ( router, config, app ) => {
              }
         } )( ctx, next );
     } )
+    /*
+     * create route is still a draft
+     */
     .post( "/create", async(ctx, next) => {
         if (ctx.request.body.usermail && ctx.request.body.password && ctx.request.body.username) {
             try {
