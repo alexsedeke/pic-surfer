@@ -1,0 +1,43 @@
+{
+  "name": "pic-surfer",
+  "version": "1.0.0",
+  "description": "Just playing around",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm-run-all --parallel execute:*",
+    "execute:worker": "node src/worker.js",
+    "execute:server": "node src/server.js",
+    "watch": "nodemon src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nahody/pic-surfer.git"
+  },
+  "keywords": [
+    "koa",
+    "node"
+  ],
+  "author": "Jan Nahody",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/nahody/pic-surfer/issues"
+  },
+  "homepage": "https://github.com/nahody/pic-surfer#readme",
+  "dependencies": {
+    "import-dir": "0.0.1",
+    "kcors": "^2.2.1",
+    "koa": "^2.2.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-compose": "^4.0.0",
+    "koa-router": "^7.2.0",
+    "lodash": "^4.17.4",
+    "logfmt": "^1.2.0",
+    "nodenvconf": "^0.4.0",
+    "npm-run-all": "^4.0.2",
+    "throng": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}

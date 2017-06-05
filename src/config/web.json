@@ -1,0 +1,15 @@
+{
+    "name": "pic-surfer",
+    "port": 8000,
+    "concurrency": 1,
+    "path": "/",
+    "templates": {
+        "path": "/templates",
+        "options": {
+            "map": {
+                "html": "ejs"
+            }
+        }
+    },
+    "cors": ""
+}
