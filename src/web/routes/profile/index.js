@@ -9,7 +9,8 @@ const passport = require( "koa-passport" );
 
 module.exports = ( router, config, app ) => {
    router
-       .get( "/", passport.authenticate('jwt', { session: false }), (ctx, next) => {
+       .use(passport.authenticate('jwt', { session: false }))
+       .get( "/", (ctx, next) => {
            ctx.body = 'profile route';
        });
 };
