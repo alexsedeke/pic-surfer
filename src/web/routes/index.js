@@ -16,6 +16,9 @@ const routerConfigs = [{
     folder: "base",
     prefix: ""
 }, {
+    folder: "validate",
+    prefix: "/validate"
+}, {
     folder: "account",
     prefix: "/account"
 }, {
