@@ -9,11 +9,13 @@
 const compose = require("koa-compose");
 const cors = require("kcors");
 const bodyParser = require("koa-bodyparser");
-const appPassport = require("./passport.js");
+const appPassport = require("./passport");
+const { serverError } = require("./errors");
 
 module.exports = function middleware( config, app ) {
     let passport = appPassport(app);
     return compose( [
+        serverError( app ),
         cors( config.cors ),
         bodyParser(),
         passport.initialize()
