@@ -14,7 +14,7 @@ function serverError(app) {
             // level error handling as well so that
             // centralized still functions correctly.
             // ACTUALY this do not propper work :(
-            // app.emit('error', err, this);
+            app.emit('error', err, this);
         }
     };
 }
