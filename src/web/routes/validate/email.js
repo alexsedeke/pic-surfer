@@ -13,9 +13,9 @@ module.exports = ( router, config, app ) => {
        .post( "/email", (ctx, next) => {
            try {
                if (!validator.isEmail(ctx.request.body.email)) {
-                   ctx.body = {message: 'Wrong email format', type: 'error'};
+                   ctx.body = {message: 'Wrong email format', type: 'error', valid: false};
                } else {
-                   ctx.body = {type: 'success'};
+                   ctx.body = {type: 'success', valid: true};
                }
                next();
         } catch(e) {
