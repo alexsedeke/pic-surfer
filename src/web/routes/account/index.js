@@ -18,10 +18,11 @@ module.exports = ( router, config, app ) => {
                  return next(err);
              }
              if (!account) {
-                 return ctx.redirect('/');
+                 ctx.status = 401;
+                 return ctx.body = { type: 'error', message: 'Wrong credentials' };
              } else {
                  let token = jwt.sign({ id: account._id, email: account.email, name: account.username }, app.settings.jwt.secret);
-                 return ctx.body = token;
+                 return ctx.body = { JWT: token };
              }
         } )( ctx, next );
     } )
